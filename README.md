@@ -1,4 +1,8 @@
 # Pinterest Provider for OAuth 2.0 Client
+[![Latest Stable Version](https://img.shields.io/packagist/v/aporat/oauth2-pinterest.svg?style=flat-square&logo=composer)](https://packagist.org/packages/aporat/oauth2-pinterest)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![codecov](https://codecov.io/github/aporat/oauth2-pinterest/graph/badge.svg?token=XZ2102SLAH)](https://codecov.io/github/aporat/oauth2-pinterest)
+[![Total Downloads](https://img.shields.io/packagist/dt/aporat/oauth2-pinterest.svg?style=flat-square)](https://packagist.org/packages/aporat/oauth2-pinterest)
 
 This package provides Pinterest OAuth 2.0 support for the PHP League's [OAuth 2.0 Client](https://github.com/thephpleague/oauth2-client).
 
