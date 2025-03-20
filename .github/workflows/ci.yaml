@@ -12,8 +12,6 @@ jobs:
             fail-fast: false
             matrix:
                 php:
-                    - '7.3'
-                    - '7.4'
                     - '8.0'
                     - '8.2'
                     - '8.3'
@@ -22,7 +20,7 @@ jobs:
                 coverage: ['none']
                 include:
                     - description: 'Minimum version'
-                      php: '7.3'
+                      php: '8.0'
                       minimum_versions: true
                     - description: 'Log Code Coverage'
                       php: '8.4'
@@ -53,16 +51,15 @@ jobs:
               if: matrix.minimum_versions == true
 
             - name: Run PHPUnit tests
-              run: vendor/bin/phpunit
+              run: composer test
               if: matrix.coverage == 'none'
 
             - name: PHPUnit tests and Log Code coverage
-              run: ./vendor/bin/phpunit --exclude-group proxy --coverage-clover=coverage.xml
+              run: composer test-ci
               if: matrix.coverage == 'xdebug'
 
-            - name: Run codecov
-              uses: codecov/codecov-action@v1
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
               if: matrix.coverage == 'xdebug'
               with:
-                  file: './coverage.xml'
-                  fail_ci_if_error: true
+                token: ${{ secrets.CODECOV_TOKEN }}
