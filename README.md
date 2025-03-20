@@ -18,14 +18,14 @@ composer require aporat/oauth2-pinterest
 
 ## Usage
 
-Usage is the same as The League's OAuth client, using `\League\OAuth2\Client\Provider\Github` as the provider.
+Usage is the same as The League's OAuth client, using `\Aporat\OAuth2\Client\Provider\Github` as the provider.
 
 ### Authorization Code Flow
 
 ```php
-$provider = new League\OAuth2\Client\Provider\Pinterest([
-    'clientId'          => '{github-client-id}',
-    'clientSecret'      => '{github-client-secret}',
+$provider = new Aporat\OAuth2\Client\Provider\Pinterest([
+    'clientId'          => '{pinterest-client-id}',
+    'clientSecret'      => '{pinterest-client-secret}',
     'redirectUri'       => 'https://example.com/callback-url',
 ]);
 
@@ -57,7 +57,7 @@ if (!isset($_GET['code'])) {
         $user = $provider->getResourceOwner($token);
 
         // Use these details to create a new profile
-        printf('Hello %s!', $user->getNickname());
+        printf('Hello %s!', $user->getUsername());
 
     } catch (Exception $e) {
 
@@ -72,12 +72,12 @@ if (!isset($_GET['code'])) {
 
 ### Managing Scopes
 
-When creating your GitHub authorization URL, you can specify the state and scopes your application may authorize.
+When creating your Pinterest authorization URL, you can specify the state and scopes your application may authorize.
 
 ```php
 $options = [
     'state' => 'OPTIONAL_CUSTOM_CONFIGURED_STATE',
-    'scope' => ['user','user:email','repo'] // array or string; at least 'user:email' is required
+    'scope' => ['user_accounts','pins'] // array or string; at least 'user:email' is required
 ];
 
 $authorizationUrl = $provider->getAuthorizationUrl($options);
@@ -86,7 +86,7 @@ $authorizationUrl = $provider->getAuthorizationUrl($options);
 ## Testing
 
 ``` bash
-$ ./vendor/bin/phpunit
+$ composer test
 ```
 
 ## Contributing
