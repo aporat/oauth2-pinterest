@@ -29,14 +29,14 @@ We accept contributions via Pull Requests on [Github](https://github.com/thephpl
 ## Running Tests
 
 ``` bash
-$ ./vendor/bin/phpunit
+$ composer test
 ```
 
 
 ## Running PHP Code Sniffer
 
 ``` bash
-$ ./vendor/bin/phpcs src --standard=psr2 -sp
+$ composer check
 ```
 
 **Happy coding**!

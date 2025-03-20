@@ -18,7 +18,7 @@ composer require aporat/oauth2-pinterest
 
 ## Usage
 
-Usage is the same as The League's OAuth client, using `\Aporat\OAuth2\Client\Provider\Github` as the provider.
+Usage is the same as The League's OAuth client, using `\Aporat\OAuth2\Client\Provider\Pinterest` as the provider.
 
 ### Authorization Code Flow
 
@@ -91,8 +91,8 @@ $ composer test
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/thephpleague/oauth2-github/blob/master/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/aporat/oauth2-pinterest/blob/master/CONTRIBUTING.md) for details.
 
 ## License
 
-The MIT License (MIT). Please see [License File](https://github.com/thephpleague/oauth2-github/blob/master/LICENSE) for more information.
+The MIT License (MIT). Please see [License File](https://github.com/aporat/oauth2-pinterest/blob/master/LICENSE) for more information.
