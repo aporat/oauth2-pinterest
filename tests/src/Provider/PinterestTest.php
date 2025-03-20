@@ -2,12 +2,15 @@
 
 namespace Aporat\OAuth2\Client\Test\Provider;
 
+use Aporat\OAuth2\Client\Provider\Exception\PinterestIdentityProviderException;
 use Aporat\OAuth2\Client\Provider\Pinterest;
 use League\OAuth2\Client\Tool\QueryBuilderTrait;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 
+use function http_build_query;
+use function json_encode;
 use function uniqid;
 
 class PinterestTest extends TestCase
@@ -75,6 +78,95 @@ class PinterestTest extends TestCase
         $uri = parse_url($url);
 
         $this->assertEquals('/v5/oauth/token', $uri['path']);
+    }
+
+    public function testGetAccessToken(): void
+    {
+        $response = m::mock('Psr\Http\Message\ResponseInterface');
+        $response->shouldReceive('getBody')
+            ->andReturn($this->createStream(
+                '{"access_token":"mock_access_token", "scope":"user_accounts:read", "token_type":"bearer"}'
+            ));
+        $response->shouldReceive('getHeader')
+            ->andReturn(['content-type' => 'json']);
+        $response->shouldReceive('getStatusCode')
+            ->andReturn(200);
+
+        $client = m::mock('GuzzleHttp\ClientInterface');
+        $client->shouldReceive('send')->times(1)->andReturn($response);
+        $this->provider->setHttpClient($client);
+
+        $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
+
+        $this->assertEquals('mock_access_token', $token->getToken());
+        $this->assertNull($token->getExpires());
+        $this->assertNull($token->getRefreshToken());
+        $this->assertNull($token->getResourceOwnerId());
+    }
+
+    public function testUserData(): void
+    {
+        $userId = rand(1000, 9999);
+        $username = uniqid();
+
+        $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
+        $postResponse->shouldReceive('getBody')
+            ->andReturn($this->createStream(http_build_query([
+                'access_token' => 'mock_access_token',
+                'expires' => 3600,
+                'refresh_token' => 'mock_refresh_token',
+            ])));
+        $postResponse->shouldReceive('getHeader')
+            ->andReturn(['content-type' => 'application/x-www-form-urlencoded']);
+        $postResponse->shouldReceive('getStatusCode')
+            ->andReturn(200);
+
+        $userResponse = m::mock('Psr\Http\Message\ResponseInterface');
+        $userResponse->shouldReceive('getBody')
+            ->andReturn($this->createStream(json_encode([
+                "id" => $userId,
+                "username" => $username,
+            ])));
+        $userResponse->shouldReceive('getHeader')
+            ->andReturn(['content-type' => 'json']);
+        $userResponse->shouldReceive('getStatusCode')
+            ->andReturn(200);
+
+        $client = m::mock('GuzzleHttp\ClientInterface');
+        $client->shouldReceive('send')
+            ->times(2)
+            ->andReturn($postResponse, $userResponse);
+        $this->provider->setHttpClient($client);
+
+        $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
+        $user = $this->provider->getResourceOwner($token);
+
+        $this->assertEquals($userId, $user->getId());
+        $this->assertEquals($userId, $user->toArray()['id']);
+        $this->assertEquals($username, $user->toArray()['username']);
+    }
+
+    public function testExceptionThrownWhenErrorReceived(): void
+    {
+        $status = 401;
+        $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
+        $postResponse->shouldReceive('getBody')
+            ->andReturn($this->createStream(json_encode([
+                "code" => "283",
+                "message" => "The code passed is incorrect or expired.",
+            ])));
+        $postResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
+        $postResponse->shouldReceive('getStatusCode')->andReturn($status);
+
+        $client = m::mock('GuzzleHttp\ClientInterface');
+        $client->shouldReceive('send')
+            ->times(1)
+            ->andReturn($postResponse);
+        $this->provider->setHttpClient($client);
+
+        $this->expectException(PinterestIdentityProviderException::class);
+
+        $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
     }
 
     private function createStream(string $body): StreamInterface
