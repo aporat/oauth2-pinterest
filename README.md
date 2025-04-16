@@ -1,7 +1,7 @@
 # Pinterest Provider for OAuth 2.0 Client
 [![Latest Stable Version](https://img.shields.io/packagist/v/aporat/oauth2-pinterest.svg?logo=composer)](https://packagist.org/packages/aporat/oauth2-pinterest)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
-[![Codecov](https://img.shields.io/codecov/c/github/aporat/oauth2-pinterest)](https://codecov.io/github/aporat/oauth2-pinterest)
+[![codecov](https://codecov.io/github/aporat/oauth2-pinterest/graph/badge.svg?token=XZ2102SLAH)](https://codecov.io/github/aporat/oauth2-pinterest)
 ![GitHub Actions Workflow Status](https://github.com/aporat/oauth2-pinterest/actions/workflows/ci.yml/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/aporat/oauth2-pinterest.svg)](https://packagist.org/packages/aporat/oauth2-pinterest)
 
